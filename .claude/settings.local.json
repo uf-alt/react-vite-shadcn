@@ -21,7 +21,8 @@
       "mcp__ctedp6__do_dis",
       "Bash(npx shadcn@latest add input)",
       "Bash(npm run lint -- --fix)",
-      "Bash(npx eslint src/lib/pokemonApi.ts src/lib/pokemonTypes.ts src/hooks/usePokemonSearch.ts src/components/PokemonSearch.tsx src/components/PokemonDisplay.tsx)"
+      "Bash(npx eslint src/lib/pokemonApi.ts src/lib/pokemonTypes.ts src/hooks/usePokemonSearch.ts src/components/PokemonSearch.tsx src/components/PokemonDisplay.tsx)",
+      "Bash(timeout:*)"
     ],
     "deny": [],
     "ask": []

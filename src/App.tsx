@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import PokemonSearch from "@/components/PokemonSearch";
 import AboutMe from "@/components/AboutMe";
+import Skills from "@/components/Skills";
 import Features from "@/components/Features";
 import Testimonials from "@/components/Testimonials";
 import Footer from "@/components/Footer";
@@ -44,6 +45,7 @@ function LandingPageContent() {
       <Hero />
       <PokemonSearch />
       <AboutMe />
+      <Skills />
       <Features />
       <Testimonials />
       <Footer />
