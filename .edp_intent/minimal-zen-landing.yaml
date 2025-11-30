@@ -1,0 +1,198 @@
+version: "1.0.0"
+generatedBy: "edp-6-mcp"
+timestamp: "2025-01-26T10:00:00Z"
+originalIntent: "Build minimalist landing page from LandingPage_PRD.md using Minimalist Zen HTML mockup design with ShadCN/UI components, theme toggle, keyboard shortcuts (T/H/F), Framer Motion animations, and centered pill-shaped toast notifications"
+
+scope:
+  allowedPaths:
+    - "src/App.tsx"
+    - "src/components/Header.tsx"
+    - "src/components/Hero.tsx"
+    - "src/components/Features.tsx"
+    - "src/components/Testimonials.tsx"
+    - "src/components/Footer.tsx"
+    - "src/components/Toast.tsx"
+    - "src/components/ThemeProvider.tsx"
+    - "src/hooks/useKeyboardShortcuts.ts"
+    - "src/hooks/useToast.ts"
+    - "src/lib/constants.ts"
+    - "src/lib/utils.ts"
+    - "src/index.css"
+    - "package.json"
+
+  forbiddenPaths:
+    - "src/main.tsx"
+    - "src/components/ui/**"
+    - "vite.config.ts"
+    - "tailwind.config.ts"
+    - "tsconfig.json"
+    - ".prettierrc.json"
+
+  newFiles:
+    - "src/components/Header.tsx"
+    - "src/components/Hero.tsx"
+    - "src/components/Features.tsx"
+    - "src/components/Testimonials.tsx"
+    - "src/components/Footer.tsx"
+    - "src/components/Toast.tsx"
+    - "src/components/ThemeProvider.tsx"
+    - "src/hooks/useKeyboardShortcuts.ts"
+    - "src/hooks/useToast.ts"
+    - "src/lib/constants.ts"
+
+apiContracts:
+  - name: "ThemeProvider"
+    type: "component"
+    params:
+      - name: "children"
+        type: "ReactNode"
+    returns: "JSX.Element"
+    required: true
+    exports:
+      - "ThemeProvider (component)"
+      - "useTheme (hook)"
+
+  - name: "useTheme"
+    type: "function"
+    params: []
+    returns: "{ theme: 'light' | 'dark', toggleTheme: () => void }"
+    required: true
+
+  - name: "useKeyboardShortcuts"
+    type: "function"
+    params:
+      - name: "shortcuts"
+        type: "Record<string, () => void>"
+    returns: "void"
+    required: true
+
+  - name: "useToast"
+    type: "function"
+    params: []
+    returns: "{ showToast: (message: string) => void }"
+    required: true
+
+  - name: "Toast"
+    type: "component"
+    params:
+      - name: "message"
+        type: "string"
+      - name: "isVisible"
+        type: "boolean"
+    returns: "JSX.Element"
+    required: true
+
+  - name: "Header"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+
+  - name: "Hero"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+
+  - name: "Features"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+
+  - name: "Testimonials"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+
+  - name: "Footer"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+
+acceptanceCriteria:
+  - id: "AC-001"
+    description: "Theme toggle switches between light and dark modes"
+    given: "User is on landing page"
+    when: "User clicks theme toggle button OR presses 'T' key"
+    then: "Theme switches, localStorage updated, toast notification shows '✨ Theme switched'"
+
+  - id: "AC-002"
+    description: "Theme preference persists across page reloads"
+    given: "User has selected dark mode"
+    when: "User refreshes the page"
+    then: "Dark mode is still active"
+
+  - id: "AC-003"
+    description: "Keyboard shortcut H scrolls to Hero section"
+    given: "User is anywhere on the page"
+    when: "User presses 'H' key"
+    then: "Page smoothly scrolls to Hero section, toast shows '📍 Jumped to Hero'"
+
+  - id: "AC-004"
+    description: "Keyboard shortcut F scrolls to Features section"
+    given: "User is anywhere on the page"
+    when: "User presses 'F' key"
+    then: "Page smoothly scrolls to Features section, toast shows '📍 Jumped to Features'"
+
+  - id: "AC-005"
+    description: "Features display in responsive grid"
+    given: "User views page on different screen sizes"
+    when: "Screen width is <768px"
+    then: "Features display in single column"
+    when: "Screen width is >=768px"
+    then: "Features display in 2-column grid"
+
+  - id: "AC-006"
+    description: "Animations fade in on scroll"
+    given: "User scrolls down the page"
+    when: "Section enters viewport"
+    then: "Section fades in with slide-up animation"
+
+  - id: "AC-007"
+    description: "Reduced motion preference respected"
+    given: "User has prefers-reduced-motion enabled"
+    when: "Page loads or sections enter viewport"
+    then: "No animations play"
+
+  - id: "AC-008"
+    description: "Visual parity with HTML mockup"
+    given: "User compares React app to .superdesign/design_iterations/ide_minimalist_zen_1.html"
+    when: "Viewing both in browser"
+    then: "Layout, spacing, colors, typography match exactly"
+
+  - id: "AC-009"
+    description: "Toast notifications centered and pill-shaped"
+    given: "User triggers keyboard shortcut"
+    when: "Toast appears"
+    then: "Toast is horizontally centered, has pill shape (border-radius 9999px), shows for 2.5s"
+
+  - id: "AC-010"
+    description: "Header has scroll effect"
+    given: "User is at top of page"
+    when: "User scrolls down >50px"
+    then: "Header border-bottom becomes visible"
+
+nonGoals:
+  - "Multi-page navigation or routing"
+  - "Form submission or backend integration"
+  - "Contact form functionality"
+  - "Email newsletter signup"
+  - "Blog or CMS integration"
+  - "Analytics or tracking"
+  - "A/B testing"
+  - "SEO optimization beyond semantic HTML"
+  - "Performance optimization beyond bundle size awareness"
+  - "Server-side rendering"
+  - "Progressive Web App features"
+  - "Internationalization (i18n)"
+  - "Authentication or user accounts"
+
+complexityBudget:
+  maxNewFunctions: 12
+  maxNewFiles: 10
+  maxLinesOfCode: 800
+  maxDependencies: 1
+  maxComponentDepth: 2

@@ -1,0 +1,236 @@
+version: "1.0.0"
+generatedBy: "edp-6-mcp"
+timestamp: "2025-11-16T00:00:00Z"
+originalIntent: "Implement a Pokémon Stats Lookup Page that allows users to search for a Pokémon by name via input field, call PokéAPI, display sprite/name/ID/types/stats/height/weight, handle loading and error states, support responsive design, and use existing shadcn/ui design system"
+
+scope:
+  allowedPaths:
+    - "src/lib/pokemonApi.ts"
+    - "src/lib/pokemonTypes.ts"
+    - "src/hooks/usePokemonSearch.ts"
+    - "src/components/PokemonSearch.tsx"
+    - "src/components/PokemonDisplay.tsx"
+    - "src/components/ui/input.tsx"
+    - "src/App.tsx"
+    - "package.json"
+  forbiddenPaths:
+    - "src/components/ThemeProvider.tsx"
+    - "src/hooks/useToast.ts"
+    - "src/hooks/useKeyboardShortcuts.ts"
+    - "src/lib/utils.ts"
+    - "src/lib/constants.ts"
+    - "vite.config.ts"
+    - "tailwind.config.ts"
+    - "tsconfig.json"
+  newFiles:
+    - "src/lib/pokemonApi.ts"
+    - "src/lib/pokemonTypes.ts"
+    - "src/hooks/usePokemonSearch.ts"
+    - "src/components/PokemonSearch.tsx"
+    - "src/components/PokemonDisplay.tsx"
+    - "src/components/ui/input.tsx"
+
+apiContracts:
+  - name: "fetchPokemon"
+    type: "function"
+    location: "src/lib/pokemonApi.ts"
+    params:
+      - name: "pokemonName"
+        type: "string"
+        description: "Pokemon name to search (case-insensitive)"
+    returns: "Promise<Pokemon>"
+    throws: "PokemonNotFoundError | NetworkError"
+    required: true
+
+  - name: "usePokemonSearch"
+    type: "hook"
+    location: "src/hooks/usePokemonSearch.ts"
+    params: []
+    returns: |
+      {
+        searchPokemon: (name: string) => Promise<void>
+        pokemon: Pokemon | null
+        isLoading: boolean
+        error: string | null
+        clearError: () => void
+      }
+    required: true
+
+  - name: "PokemonSearch"
+    type: "component"
+    location: "src/components/PokemonSearch.tsx"
+    props: []
+    description: "Main container component with search input and results display"
+    required: true
+
+  - name: "PokemonDisplay"
+    type: "component"
+    location: "src/components/PokemonDisplay.tsx"
+    props:
+      - name: "pokemon"
+        type: "Pokemon"
+        required: true
+    description: "Displays Pokemon data (sprite, stats, types, physical attributes)"
+    required: true
+
+typeDefinitions:
+  - name: "Pokemon"
+    type: "interface"
+    location: "src/lib/pokemonTypes.ts"
+    fields:
+      - name: "id"
+        type: "number"
+      - name: "name"
+        type: "string"
+      - name: "sprite"
+        type: "string"
+      - name: "types"
+        type: "string[]"
+      - name: "stats"
+        type: "PokemonStat[]"
+      - name: "height"
+        type: "number"
+      - name: "weight"
+        type: "number"
+
+  - name: "PokemonStat"
+    type: "interface"
+    location: "src/lib/pokemonTypes.ts"
+    fields:
+      - name: "name"
+        type: "string"
+      - name: "value"
+        type: "number"
+
+  - name: "PokeApiResponse"
+    type: "interface"
+    location: "src/lib/pokemonTypes.ts"
+    description: "Raw response from PokeAPI (subset of fields)"
+    fields:
+      - name: "id"
+        type: "number"
+      - name: "name"
+        type: "string"
+      - name: "height"
+        type: "number"
+      - name: "weight"
+        type: "number"
+      - name: "sprites"
+        type: "{ front_default: string | null }"
+      - name: "types"
+        type: "Array<{ type: { name: string } }>"
+      - name: "stats"
+        type: "Array<{ base_stat: number; stat: { name: string } }>"
+
+acceptanceCriteria:
+  - id: "AC-001"
+    description: "User can search for a valid Pokemon and see results"
+    given: "User is on the page with search input visible"
+    when: "User types 'pikachu' and clicks Search or presses Enter"
+    then: "Loading spinner displays, then Pokemon card shows with sprite, name '#025', Electric badge, all 6 stat bars, height 0.4m, weight 6.0kg"
+
+  - id: "AC-002"
+    description: "Empty input shows validation error"
+    given: "Search input is empty or whitespace only"
+    when: "User clicks Search button"
+    then: "Error message displays 'Please enter a Pokémon name' without making API call"
+
+  - id: "AC-003"
+    description: "Invalid Pokemon name shows 404 error"
+    given: "User is on the page"
+    when: "User searches for 'asdfasdf' (non-existent Pokemon)"
+    then: "Loading displays briefly, then error card shows 'Pokémon not found. Please check the spelling and try again.'"
+
+  - id: "AC-004"
+    description: "Network error shows generic error message"
+    given: "Network is disconnected or API is down"
+    when: "User attempts to search"
+    then: "Error message displays 'Network error. Please check your connection and try again.'"
+
+  - id: "AC-005"
+    description: "Search is case-insensitive"
+    given: "User is on the page"
+    when: "User searches for 'CHARIZARD' or 'ChArIzArD'"
+    then: "Results display correctly (API normalizes to lowercase)"
+
+  - id: "AC-006"
+    description: "Layout is responsive on mobile"
+    given: "Viewport is 375px wide (mobile)"
+    when: "User searches and views results"
+    then: "Search input, sprite, and stats stack vertically without horizontal scroll"
+
+  - id: "AC-007"
+    description: "Layout works on desktop"
+    given: "Viewport is 1200px wide (desktop)"
+    when: "User searches and views results"
+    then: "Content is centered with max-width constraint, readable and aesthetically pleasing"
+
+  - id: "AC-008"
+    description: "Dark mode works automatically"
+    given: "User has dark theme enabled via ThemeProvider"
+    when: "Pokemon results display"
+    then: "Colors use CSS custom properties and adapt to dark theme automatically"
+
+  - id: "AC-009"
+    description: "Type badges display correctly"
+    given: "Pokemon with multiple types (e.g., Bulbasaur: Grass/Poison)"
+    when: "Results display"
+    then: "Both type badges render horizontally with proper spacing"
+
+  - id: "AC-010"
+    description: "Stat bars are proportionally sized"
+    given: "Pokemon stats display"
+    when: "User views stat bars"
+    then: "Bar widths are proportional to stat values (0-255 range, scaled to percentage)"
+
+nonGoals:
+  - "Persistent caching (localStorage or IndexedDB)"
+  - "Search history or recent searches"
+  - "Favorite/bookmark functionality"
+  - "Autocomplete or search suggestions"
+  - "Multiple Pokemon comparison"
+  - "Advanced filtering (by type, generation, etc.)"
+  - "Pagination or infinite scroll"
+  - "Chart visualizations (radar charts, etc.)"
+  - "External data fetching libraries (TanStack Query, SWR)"
+  - "Client-side routing (React Router)"
+  - "Animation beyond simple fade-in (optional)"
+  - "Abilities display"
+  - "Type effectiveness display"
+  - "Evolution chain"
+  - "Move list"
+  - "Keyboard navigation beyond Enter key"
+
+complexityBudget:
+  maxNewFunctions: 8
+  maxNewFiles: 6
+  maxLinesOfCode: 450
+  maxDependencies: 0
+
+reusableComponents:
+  - name: "Button"
+    path: "src/components/ui/button.tsx"
+    usage: "Search button"
+  - name: "Badge"
+    path: "src/components/ui/badge.tsx"
+    usage: "Pokemon type badges"
+  - name: "Card"
+    path: "src/components/ui/card.tsx"
+    usage: "Results container, stats sections"
+  - name: "cn"
+    path: "src/lib/utils.ts"
+    usage: "Class name merging"
+
+kissCompliance:
+  simplicityScore: 9
+  justifications:
+    - "Native fetch instead of external library (0 dependencies)"
+    - "Single API endpoint, linear data flow"
+    - "Minimal state management (4 states total)"
+    - "90% component reuse from existing design system"
+    - "No routing, stays single-page"
+  complexityJustifications:
+    - reason: "TypeScript interfaces for API response"
+      justification: "Required for type safety in strict mode"
+      alternative: "Use 'any' type"
+      whyRejected: "Defeats TypeScript benefits, loses IDE autocomplete"

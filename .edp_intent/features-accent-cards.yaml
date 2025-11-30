@@ -1,0 +1,86 @@
+version: "1.0.0"
+generatedBy: "edp-6-mcp"
+timestamp: "2025-11-09T16:30:00Z"
+originalIntent: "Refactor Features.tsx to use ShadCN Card components with Accent Background Cards design (Option 3 from IDEATE phase)"
+
+scope:
+  allowedPaths:
+    - "src/components/Features.tsx"
+  forbiddenPaths:
+    - "src/components/ui/card.tsx"
+    - "src/lib/constants.ts"
+    - "src/components/Hero.tsx"
+    - "src/components/Header.tsx"
+    - "src/components/Footer.tsx"
+    - "src/components/Testimonials.tsx"
+    - "src/components/ThemeProvider.tsx"
+    - "src/App.tsx"
+  newFiles: []
+
+apiContracts:
+  - name: "Features"
+    type: "component"
+    params: []
+    returns: "JSX.Element"
+    required: true
+    description: "Default export React component rendering features grid with Card components"
+
+acceptanceCriteria:
+  - id: "AC-001"
+    description: "Features component uses ShadCN Card and CardContent components"
+    given: "Features.tsx is refactored"
+    when: "Component renders"
+    then: "Card and CardContent components are used instead of motion.div"
+
+  - id: "AC-002"
+    description: "Accent background styling applied to cards"
+    given: "Cards are rendered"
+    when: "Viewing in both light and dark themes"
+    then: "Cards have bg-accent background color from theme system"
+
+  - id: "AC-003"
+    description: "Hover effects work correctly"
+    given: "Mouse hovers over a card"
+    when: "Hover state is active"
+    then: "Card scales to 1.03 and icon scales to 1.1 with smooth transition"
+
+  - id: "AC-004"
+    description: "Framer Motion animations preserved"
+    given: "User scrolls to features section"
+    when: "Section enters viewport"
+    then: "Staggered fade-in animations trigger as before"
+
+  - id: "AC-005"
+    description: "Reduced motion support maintained"
+    given: "User has prefers-reduced-motion enabled"
+    when: "Component renders"
+    then: "No animations play, static content displays immediately"
+
+  - id: "AC-006"
+    description: "Responsive grid layout maintained"
+    given: "Component renders on different screen sizes"
+    when: "Viewport width changes"
+    then: "1 column on mobile, 2 columns on md+ breakpoint, gaps adjust correctly"
+
+  - id: "AC-007"
+    description: "Data sourcing unchanged"
+    given: "Component uses FEATURES constant"
+    when: "Component renders"
+    then: "All 4 features display with correct icon, title, description"
+
+nonGoals:
+  - "Modifying FEATURES data structure in constants.ts"
+  - "Creating new custom Card variant components"
+  - "Adding new animation types beyond scale effects"
+  - "Changing grid layout structure or breakpoints"
+  - "Modifying other landing page components"
+  - "Adjusting theme system or CSS variables"
+  - "Adding loading states or skeleton screens"
+  - "Implementing card click handlers or navigation"
+
+complexityBudget:
+  maxNewFunctions: 0
+  maxNewFiles: 0
+  maxLinesOfCode: 50
+  maxDependencies: 0
+  maxComponentDepth: 3

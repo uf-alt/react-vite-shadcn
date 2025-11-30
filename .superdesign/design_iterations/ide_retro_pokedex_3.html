@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concept 3: Retro Pokédex Experience</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    .pixel-font {
+      font-family: 'Press Start 2P', cursive;
+      image-rendering: pixelated;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateY(-20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .slide-in {
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .gameboy-shadow {
+      box-shadow:
+        0 4px 0 #2d3748,
+        0 8px 12px rgba(0,0,0,0.4);
+    }
+
+    .screen-inset {
+      box-shadow: inset 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    .pixel-border {
+      border: 4px solid #1a202c;
+      border-radius: 0;
+      image-rendering: pixelated;
+    }
+
+    @keyframes scan {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(100%); }
+    }
+
+    .scanline {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .scanline::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      animation: scan 4s linear infinite;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-red-600 via-red-700 to-red-800 min-h-screen flex items-center justify-center p-4">
+
+  <!-- Pokédex Device -->
+  <div class="max-w-2xl w-full">
+
+    <!-- Top Red Shell -->
+    <div class="bg-gradient-to-b from-red-600 to-red-700 rounded-t-3xl p-8 gameboy-shadow border-4 border-red-900">
+
+      <!-- Light Indicators -->
+      <div class="flex gap-3 mb-6">
+        <div class="w-4 h-4 rounded-full bg-blue-400 border-2 border-blue-600 shadow-lg blink"></div>
+        <div class="w-4 h-4 rounded-full bg-red-400 border-2 border-red-600 shadow-lg"></div>
+        <div class="w-4 h-4 rounded-full bg-yellow-400 border-2 border-yellow-600 shadow-lg"></div>
+      </div>
+
+      <!-- Screen -->
+      <div class="bg-gray-800 rounded-lg p-4 screen-inset scanline">
+        <div class="bg-gradient-to-br from-green-300 to-green-400 rounded-md p-6 min-h-[400px] relative">
+
+          <!-- Screen Content -->
+          <div id="screenContent" class="pixel-font text-green-900">
+
+            <!-- Search Mode -->
+            <div id="searchMode" class="space-y-4">
+              <div class="text-center mb-6">
+                <h1 class="text-xs mb-2">POKéDEX v1.0</h1>
+                <div class="text-[8px] opacity-60">SEARCH DATABASE</div>
+              </div>
+
+              <div class="bg-green-900/20 border-2 border-green-900 p-3 rounded">
+                <div class="text-[8px] mb-2">ENTER NAME:</div>
+                <input
+                  id="pokeInput"
+                  type="text"
+                  maxlength="12"
+                  class="w-full bg-green-200 text-green-900 px-2 py-1 text-xs uppercase pixel-font focus:outline-none focus:ring-2 focus:ring-green-700"
+                  placeholder="PIKACHU"
+                />
+              </div>
+
+              <div class="text-[8px] text-center opacity-60 mt-4">
+                PRESS [A] TO SEARCH
+              </div>
+            </div>
+
+            <!-- Loading Mode -->
+            <div id="loadingMode" class="hidden text-center py-16">
+              <div class="text-xs mb-4">SEARCHING...</div>
+              <div class="flex justify-center gap-1">
+                <div class="w-2 h-2 bg-green-900 animate-bounce" style="animation-delay: 0s"></div>
+                <div class="w-2 h-2 bg-green-900 animate-bounce" style="animation-delay: 0.1s"></div>
+                <div class="w-2 h-2 bg-green-900 animate-bounce" style="animation-delay: 0.2s"></div>
+              </div>
+            </div>
+
+            <!-- Results Mode -->
+            <div id="resultsMode" class="hidden slide-in">
+              <div class="flex justify-between items-start mb-4">
+                <div>
+                  <h2 class="text-sm">PIKACHU</h2>
+                  <div class="text-[8px] opacity-60">No.025</div>
+                </div>
+                <div class="bg-yellow-500 text-yellow-900 px-2 py-1 text-[8px] border-2 border-yellow-700">
+                  ELECTRIC
+                </div>
+              </div>
+
+              <!-- Sprite -->
+              <div class="bg-green-200 border-2 border-green-900 rounded p-4 mb-4 flex items-center justify-center">
+                <img
+                  id="spriteImage"
+                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-i/red-blue/25.png"
+                  alt="Pikachu"
+                  class="w-24 h-24 image-rendering-pixelated"
+                  style="image-rendering: pixelated;"
+                />
+              </div>
+
+              <!-- Stats -->
+              <div class="space-y-2">
+                <div class="text-[8px] mb-2">BASE STATS:</div>
+                <div class="space-y-1 text-[8px]">
+                  <div class="flex justify-between">
+                    <span>HP</span>
+                    <span>█████░░░░░ 35</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>ATK</span>
+                    <span>██████░░░░ 55</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>DEF</span>
+                    <span>████░░░░░░ 40</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span>SPD</span>
+                    <span>█████████░ 90</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3 border-t-2 border-green-900 text-[8px] opacity-60">
+                HT: 0.4m  WT: 6.0kg
+              </div>
+            </div>
+
+            <!-- Error Mode -->
+            <div id="errorMode" class="hidden text-center py-16">
+              <div class="text-xs mb-4">ERROR!</div>
+              <div class="text-[8px] opacity-60 leading-relaxed">
+                POKéMON NOT FOUND<br/>
+                IN DATABASE
+              </div>
+              <div class="text-[8px] mt-6 opacity-40">
+                PRESS [B] TO RETRY
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Screen Border Light -->
+        <div class="absolute bottom-2 right-2 w-2 h-2 rounded-full bg-red-500 border border-red-700 blink"></div>
+      </div>
+
+    </div>
+
+    <!-- Bottom Controls Section -->
+    <div class="bg-gradient-to-b from-red-700 to-red-800 rounded-b-3xl p-8 border-4 border-t-0 border-red-900">
+
+      <div class="grid grid-cols-2 gap-8">
+
+        <!-- D-Pad -->
+        <div class="flex flex-col items-center">
+          <div class="text-[8px] pixel-font text-red-200 mb-3 opacity-60">CONTROL PAD</div>
+          <div class="relative w-32 h-32">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <!-- D-Pad -->
+              <div class="relative">
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full w-10 h-10 bg-gray-900 border-2 border-gray-700"></div>
+                <div class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full w-10 h-10 bg-gray-900 border-2 border-gray-700"></div>
+                <div class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full w-10 h-10 bg-gray-900 border-2 border-gray-700"></div>
+                <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-10 h-10 bg-gray-900 border-2 border-gray-700"></div>
+                <div class="w-10 h-10 bg-gray-900 border-2 border-gray-700"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex flex-col items-center justify-center">
+          <div class="text-[8px] pixel-font text-red-200 mb-3 opacity-60">ACTION</div>
+          <div class="flex gap-6 items-center">
+            <button
+              id="btnB"
+              class="w-14 h-14 rounded-full bg-yellow-500 border-4 border-yellow-700 shadow-lg hover:bg-yellow-400 active:shadow-inner transition-all gameboy-shadow"
+            >
+              <span class="pixel-font text-[10px] text-yellow-900">B</span>
+            </button>
+            <button
+              id="btnA"
+              class="w-14 h-14 rounded-full bg-red-500 border-4 border-red-700 shadow-lg hover:bg-red-400 active:shadow-inner transition-all gameboy-shadow"
+            >
+              <span class="pixel-font text-[10px] text-red-900">A</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Buttons -->
+      <div class="flex justify-center gap-4 mt-6">
+        <button class="px-4 py-1 bg-gray-900 text-gray-300 pixel-font text-[8px] rounded-full border-2 border-gray-700 hover:bg-gray-800">
+          SELECT
+        </button>
+        <button class="px-4 py-1 bg-gray-900 text-gray-300 pixel-font text-[8px] rounded-full border-2 border-gray-700 hover:bg-gray-800">
+          START
+        </button>
+      </div>
+
+      <!-- Speaker Grilles -->
+      <div class="flex gap-1 justify-center mt-6">
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+        <div class="w-1 h-8 bg-red-900 rounded-full"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+    const searchMode = document.getElementById('searchMode');
+    const loadingMode = document.getElementById('loadingMode');
+    const resultsMode = document.getElementById('resultsMode');
+    const errorMode = document.getElementById('errorMode');
+    const pokeInput = document.getElementById('pokeInput');
+    const btnA = document.getElementById('btnA');
+    const btnB = document.getElementById('btnB');
+
+    function hideAllModes() {
+      searchMode.classList.add('hidden');
+      loadingMode.classList.add('hidden');
+      resultsMode.classList.add('hidden');
+      errorMode.classList.add('hidden');
+    }
+
+    function showSearch() {
+      hideAllModes();
+      searchMode.classList.remove('hidden');
+      pokeInput.value = '';
+      setTimeout(() => pokeInput.focus(), 100);
+    }
+
+    function showLoading() {
+      hideAllModes();
+      loadingMode.classList.remove('hidden');
+    }
+
+    function showResults() {
+      hideAllModes();
+      resultsMode.classList.remove('hidden');
+      resultsMode.classList.remove('slide-in');
+      void resultsMode.offsetWidth; // Trigger reflow
+      resultsMode.classList.add('slide-in');
+    }
+
+    function showError() {
+      hideAllModes();
+      errorMode.classList.remove('hidden');
+    }
+
+    // A Button - Search
+    btnA.addEventListener('click', () => {
+      const query = pokeInput.value.trim();
+      if (!query) {
+        showError();
+        return;
+      }
+
+      showLoading();
+      setTimeout(() => {
+        showResults();
+      }, 1000);
+    });
+
+    // B Button - Back to search
+    btnB.addEventListener('click', () => {
+      showSearch();
+    });
+
+    // Enter key support
+    pokeInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        btnA.click();
+      }
+    });
+
+    // Start in search mode
+    showSearch();
+  </script>
+
+</body>
+</html>
